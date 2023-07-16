@@ -16,11 +16,18 @@
       <button type="submit" class="todo-button">Add</button>
     </form>
     
+    <h2>Active Tasks</h2>
     <ul class="todo-list" id="todo-list">
-      <!-- Existing to-do items will be added here -->
+      <!-- Existing active to-do items will be added here -->
+    </ul>
+
+    <h2>Completed Tasks</h2>
+    <ul class="completed-list" id="completed-list">
+      <!-- Completed to-do items will be added here -->
     </ul>
   </div>
   
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0"></script>
   <script>
     // Function to add a new to-do item
     function addTodoItem(event) {
@@ -80,11 +87,15 @@
     function toggleCompleted(event) {
       var checkbox = event.target;
       var listItem = checkbox.parentNode;
+      var completedList = document.getElementById("completed-list");
       
       if (checkbox.checked) {
         listItem.classList.add("completed");
+        completedList.appendChild(listItem);
       } else {
         listItem.classList.remove("completed");
+        var todoList = document.getElementById("todo-list");
+        todoList.appendChild(listItem);
       }
     }
     
@@ -92,10 +103,20 @@
     function deleteTodoItem(event) {
       var deleteButton = event.target;
       var listItem = deleteButton.parentNode;
-      var todoList = document.getElementById("todo-list");
       
-      todoList.removeChild(listItem);
+      listItem.parentNode.removeChild(listItem);
     }
+    
+    // Initialize Sortable.js to enable task reordering
+    Sortable.create(document.getElementById("todo-list"), {
+      group: "tasks",
+      animation: 150
+    });
+
+    Sortable.create(document.getElementById("completed-list"), {
+      group: "tasks",
+      animation: 150
+    });
     
     // Add event listener to the form submit event
     var form = document.getElementById("todo-form");
